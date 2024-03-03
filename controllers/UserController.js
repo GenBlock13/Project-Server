@@ -1,58 +1,60 @@
 import { userService } from '../services/UserService.js'
 
 class UserController {
-    // для каждого маршрута создаем свой метод
-    // функция для создания аккаунта
     async registration(req, res, next) {
         try {
-            // из тела запроса вытаскиваем данные пользователя
             const { email, password, name } = req.body
-            // передаем эти данные в метод registration объекта userService,
-            // которая вернет нам токены и информацию о пользователе
             const userData = await userService.registration(email, password, name)
-            // устанавливаем в cookie REFRESH токен
-            res.cookie('resfreshToken', userData.refreshToken, {maxAge: 90 * 24 * 60 * 60 * 1000})
-            // отправляем эту информацию на клиент
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 90 * 24 * 60 * 60 * 1000})
             return res.json(userData)
         } catch (e) {
-            // в случае ошибки выведем ее в логи
-            console.log(e)
+            next(e)
         }
     }
     
-    // функция для авторизации
     async login(req, res, next) {
         try {
-            
+            // получаем email и пароль пользователя из тела запроса
+            const { email, password } = req.body
+            // передаем эти данные в объект userService в функцию login
+            const userData = await userService.login(email, password)
+            // устанавливаем в cookie пользователя REFRESH токен
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 90 * 24 * 60 * 60 * 1000})
+            // возвращаем полученные данные пользователя
+            return res.json(userData)
         } catch (e) {
-            
+            next(e)
         }
     }
 
-    // функция для выхода из приложения
     async logout(req, res, next) {
         try {
-            
+            // достаем из куки REFRESH токен
+            const { refreshToken } = req.cookies
+            // вызовем функцию logout у объекта userService
+            const token = await userService.logout(refreshToken)
+            // очистим cookie по ключу refreshToken
+            res.clearCookie('refreshToken')
+            // функция возвращает 
+            return res.json(token)
         } catch (e) {
-            
+            next(e)
         }
     }
 
-    // функция для обновления токена
     async refresh(req, res, next) {
         try {
-            
+
         } catch (e) {
-            
+            next(e)
         }
     }
     
-    // тестовая функция для получения всех пользователей с БД
     async getUsers(req, res, next) {
         try {
             
         } catch (e) {
-            console.log(e)
+            next(e)
         }
     }
 }
