@@ -7,7 +7,6 @@ import {
   DB_USER,
 } from '../utils/secrets.js'
 
-// создаем объект базы данных, в который передаем настройки
 const sequelize = new Sequelize(
     DB_NAME,
     DB_USER,
