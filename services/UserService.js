@@ -7,7 +7,6 @@ import setTokens from '../utils/setTokens.js'
 
 class UserService {
     async registration(email, password, name) {
-        // const candidate = await User.findOne({where: {email}})
         const candidate = await getUser(email)
         if (candidate) {
             throw ApiError.badRequest(`Пользователь с адресом ${email} уже существует`)
@@ -15,51 +14,52 @@ class UserService {
         const salt = await bcrypt.genSalt(5)
         const hashPassword = await bcrypt.hash(password, salt)
         const user = await User.create({email, password: hashPassword, name})
-        // const userDto = new UserDto(user)
-        // const tokens = await setTokens({...userDto})
-        // const tokens = tokenService.generateTokens({...userDto})
-        // await tokenService.saveToken(userDto.id, tokens.refreshToken)
-        // return {
-        //     ...tokens,
-        //     user: userDto
-        // }
         return setTokens(user)
     }
 
     async login(email, password) {
-        // делаем поиск по полю email
-        // const user = await User.findOne({where: {email}})
         const user = await getUser(email)
-        // если данный пользователь не найден
         if (!user) {
-            // пробрасываем ошибку
             throw ApiError.badRequest('Неверный логин или пароль')
         }
-        // а если пользователь найден, то сравниваем его пароль, который он ввел
-        // с паролем в хешированном виде, который хранится в базе данных
         const isPassEquals = await bcrypt.compare(password, user.password)
-        // если хешированные пароли не равны
         if (!isPassEquals) {
-            // пробрасываем ошибку
             throw ApiError.badRequest('Неверный логин или пароль')
         }
-        // если же пароли равны, то генерируем ограниченные данные пользователя
-        // при помощи dto
-        // const userDto = new UserDto(user)
-        // // снова генерируем пару токенов и возвращаем токены и ограниченные данные пользователя
-        // const tokens = tokenService.generateTokens({...userDto})
-        // await tokenService.saveToken(userDto.id, tokens.refreshToken)
-        // return {
-        //     ...tokens,
-        //     user: userDto
-        // }
         return setTokens(user)
     }
 
-    // функция выхода
     async logout(refreshToken) {
        const token = await tokenService.removeToken(refreshToken) 
        return token
+    }
+
+    // функция обновления токена
+    async refresh(refreshToken) {
+        // если токена нет (null или undefined) значит пользователь не авторизован
+        if(!refreshToken) {
+            // поэтому пробрасываем ошибку, что пользователь не авторизован
+            throw new ApiError.unauthorizedError()
+        }
+        // проверяем REFERESH токен
+        const tokenData = tokenService.validateRefreshToken(refreshToken)
+        // теперь этот токен надо найти в базе данных
+        const tokenFromDb = await tokenService.findToken(refreshToken)
+        // убеждаемся, что и валидация токена и его поиск в базе данных прошли успешно
+        // если не пройдена валидация или нет токена в базе данных, то пробрасываем ошибку
+        if (!tokenData || !tokenFromDb) {
+            throw ApiError.unauthorizedError()
+        }
+        // если все в порядке, то мы получаем пользователя в функции getUser()
+        // и генерируем новую пару токенов в функции setTokens() и возвращаем ответ на клиент
+        const user = await getUser(tokenData.email)
+        return setTokens(user)
+    }
+
+    async getAllUsers() {
+        // получаем всех пользователей из БД и возвращаем их
+        const users = await User.findAll()
+        return users
     }
 }
 

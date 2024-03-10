@@ -12,6 +12,33 @@ class TokenService {
         }
     }
 
+    // функция валидации ACCESS токена
+    validateAccessToken(token) {
+        try {
+            const userData = jwt.verify(token, SECRET_KEY)
+            return userData
+        } catch (e) {
+            return null
+        }
+    }
+    
+    // функция валидации REFRESH токена
+    validateRefreshToken(token) {
+        try {
+            const userData = jwt.verify(token, SECRET_KEY2)
+            return userData
+        } catch (e) {
+            return null
+        }
+    }
+
+    // функция поиска токена в БД
+    async findToken(refreshToken) {
+        // находим запись с токеном
+        const tokenData = await Token.findOne({where: {refreshToken}})
+        return tokenData
+    }
+
     async saveToken(userId, refreshToken) {
         const tokenData = await Token.findOne({where: {userId}})
         if (tokenData) {
@@ -22,11 +49,8 @@ class TokenService {
         return token
     }
 
-    // функция удаления токена
     async removeToken(refreshToken) {
-        // находим запись с токеном и удаляем ее
         const tokenData = await Token.destroy({where: {refreshToken}})
-        // возвращается 1, если удаление прошло успешно и 0, если нет
         return tokenData
     }
 }
