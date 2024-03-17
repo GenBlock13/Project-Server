@@ -1,11 +1,12 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../config/db.js'
 import { Token } from './Token.js'
+import { Comment } from './Comment.js'
+import { Place } from './Place.js'
+import { Fact } from './Fact.js'
 
-// создаем класс пользователя, который наследует все поля и методы класса Model
 class User extends Model {}
 
-// инициализируем поля модели User и дополнительные настройки
 User.init({
         id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
         name: { type: DataTypes.STRING, allowNull: false },
@@ -22,5 +23,14 @@ User.init({
 
 User.hasOne(Token)
 Token.belongsTo(User)
+
+User.hasMany(Fact)
+Fact.belongsTo(User)
+
+User.hasMany(Place)
+Place.belongsTo(User)
+
+User.hasMany(Comment)
+Comment.belongsTo(User)
 
 export { User }

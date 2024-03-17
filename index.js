@@ -14,6 +14,8 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
 app.use('/api', router)
+// указываем путь к папке, которая будет отдавать статические файлы
+app.use('/uploads', express.static('uploads'))
 app.use(errorMiddleware) // всегда последний
 
 const startApp = async () => {

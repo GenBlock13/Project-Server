@@ -19,4 +19,9 @@ export class ApiError extends Error {
     static badRequest(message, errors = []) {
         return new ApiError(400, message, errors)
     }
+
+    // функция прокидывает ошибку о недостаточности прав
+    static forbidden() {
+        return new ApiError(403, 'Вам не хватает прав. Доступ запрещен')
+    }
 }
