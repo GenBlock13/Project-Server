@@ -6,7 +6,7 @@ class Fact extends Model {}
 Fact.init({
         id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
         title: {type: DataTypes.STRING, unique: true, allowNull: false},
-        text: {type: DataTypes.STRING, allowNull: false},
+        text: {type: DataTypes.TEXT, allowNull: false},
         img: {type: DataTypes.STRING}
     },
     {

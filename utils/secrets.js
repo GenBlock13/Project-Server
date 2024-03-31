@@ -15,3 +15,4 @@ export const DB_PORT = Number(process.env.DB_PORT)
 export const SECRET_KEY = process.env.SECRET_KEY
 export const SECRET_KEY2 = process.env.SECRET_KEY2
 export const SERVER_PORT = process.env.SERVER_PORT
+export const ADMIN_EMAIL = process.env.ADMIN_EMAIL
