@@ -20,3 +20,28 @@ export const commentValidation = [
     max: 500,
    }),
 ]
+
+export const factValidation = [
+   body('title', 'Заголовок должен быть не менее 10 символов').isLength({
+    min: 10,
+   }),
+   body(
+      'text',
+      'Текст описания факта должен быть не менее 150 символов'
+   ).isLength({
+    min: 150,
+   }),
+]
+
+
+export const placeValidation = [
+   body('title', 'Заголовок должен быть не менее 10 символов').isLength({
+    min: 10,
+   }),
+   body(
+      'text',
+      'Текст описания достопримечательности должен быть не менее 150 символов'
+   ).isLength({
+    min: 150,
+   }),
+]

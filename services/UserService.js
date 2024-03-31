@@ -4,6 +4,7 @@ import { tokenService } from './TokenService.js'
 import { ApiError } from '../exceptions/ApiError.js'
 import getUser from '../utils/getUser.js'
 import setTokens from '../utils/setTokens.js'
+import { ADMIN_EMAIL } from '../utils/secrets.js'
 
 class UserService {
     async registration(email, password, name) {
@@ -11,9 +12,20 @@ class UserService {
         if (candidate) {
             throw ApiError.badRequest(`Пользователь с адресом ${email} уже существует`)
         }
+        // если при регистрации указан email администратора, 
+        // то устанавливаем ему роль ADMIN 
+        let role
+        if (email === ADMIN_EMAIL) {
+            role = 'ADMIN'
+        }
         const salt = await bcrypt.genSalt(5)
         const hashPassword = await bcrypt.hash(password, salt)
-        const user = await User.create({email, password: hashPassword, name})
+        const user = await User.create({
+          email,
+          password: hashPassword,
+          name,
+          role,
+        })
         return setTokens(user)
     }
 
