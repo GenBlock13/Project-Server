@@ -7,6 +7,7 @@ export default function (req, res, next) {
   const errors = validationResult(req)
   // если ошибки найдены (массив ошибок не пустой)
   if (!errors.isEmpty()) {
+    // console.log(errors)
     // вызывается функция next(), в которой вызываем статичный метод badRequest
     // созданного нами ApiError и передаем в него сообщение и массив ошибок
     return next(ApiError.badRequest('Ошибка при валидации', errors.array()))

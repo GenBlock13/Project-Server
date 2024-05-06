@@ -16,3 +16,4 @@ export const SECRET_KEY = process.env.SECRET_KEY
 export const SECRET_KEY2 = process.env.SECRET_KEY2
 export const SERVER_PORT = process.env.SERVER_PORT
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL
+export const CLIENT_URL = process.env.CLIENT_URL

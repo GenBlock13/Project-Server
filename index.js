@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { sequelize } from './config/db.js'
-import { SERVER_PORT } from './utils/secrets.js'
+import { CLIENT_URL, SERVER_PORT } from './utils/secrets.js'
 import { router } from './routes/router.js'
 import errorMiddleware from './middleware/errorMiddleware.js'
 
@@ -12,8 +12,14 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+app.use(cors(
+  {
+    credentials: true,
+    origin: CLIENT_URL
+  }
+))
 app.use('/api', router)
+
 // указываем путь к папке, которая будет отдавать статические файлы
 app.use('/uploads', express.static('uploads'))
 app.use(errorMiddleware) // всегда последний
