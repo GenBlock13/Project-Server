@@ -28,7 +28,7 @@ const startApp = async () => {
   try {
     await sequelize.authenticate()
     console.log('Соединение с базой данных установлено')
-    await sequelize.sync()
+    // await sequelize.sync()
     // метод drop() удаляет все созданные таблицы в базе данных
     // await sequelize.drop()
     app.listen(PORT, (err) => {
