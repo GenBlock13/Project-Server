@@ -6,7 +6,7 @@ export const registerValidation = [
     min: 4,
     max: 12,
    }),
-   body('name', 'Имя должен быть не менее 3 символов').isLength({
+   body('name', 'Имя должно быть не менее 3 символов').isLength({
     min: 3,
    })
 ]

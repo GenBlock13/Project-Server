@@ -2,7 +2,9 @@ import { Place } from '../models/Place.js'
 
 class PlaceService {
     async getAllPlaces() {
-        const places = await Place.findAll()
+        const places = await Place.findAll({
+            order: [['id','DESC']]
+        })
         return places
     }
 

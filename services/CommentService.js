@@ -4,7 +4,9 @@ import getUsername from '../utils/getUsername.js'
 
 class CommentService {
     async getAllComments() {
-        const comments = await Comment.findAll()
+        const comments = await Comment.findAll({
+            order: [['id','DESC']]
+        })
         return comments
     }
 
